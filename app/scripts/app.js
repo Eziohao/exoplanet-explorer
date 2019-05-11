@@ -26,6 +26,7 @@ Instructions:
    * @param  {Object} data - The raw data describing the planet.
    */
   function createPlanetThumb(data) {
+
     var pT = document.createElement('planet-thumb');
     for (var d in data) {
       pT[d] = data[d];
@@ -59,6 +60,22 @@ Instructions:
     Your code goes here! Uncomment the next line when you're ready to start!
      */
 
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json')
+    .then(res=>{
+      var promise=[];
+      res.results.map(url=>{
+       promise.push(getJSON('../'+url));
+      })
+      console.log(promise)
+      Promise.all(promise)
+      .then(res1=>{
+        res1.forEach(value=>{
+          createPlanetThumb(value)
+        })
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    })
   });
 })(document);
